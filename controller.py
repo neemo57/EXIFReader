@@ -37,6 +37,8 @@ class MainController:
         self.height = None
         self.start_x = None
         self.start_y = None
+        self.mouse_x = None
+        self.mouse_y = None
 
         # Configure the main window
         self.configure_window()
@@ -61,7 +63,7 @@ class MainController:
         self.start_x = (self.root_window.winfo_screenwidth() - self.width) // 2
         self.start_y = (self.root_window.winfo_screenheight() - self.height) // 2
 
-        self.root_window.geometry(f"{self.width}x{self.height}+{self.start_x}+{self.start_y}")
+        self.set_geometry()
 
         # For borderless window
         self.root_window.overrideredirect(self.BORDERLESS)
@@ -76,6 +78,17 @@ class MainController:
         # Add key bind
         self.root_window.bind("<KeyRelease>", self.handle_key_release)
 
+        # Add mouse binds
+        self.root_window.bind("<Motion>", self.on_mouse_move)
+        self.root_window.bind("<B1-Motion>", self.on_drag)
+
+    def set_geometry(self):
+        """
+        Update the geometry of the root window
+        :return:None
+        """
+        self.root_window.geometry(f"{self.width}x{self.height}+{self.start_x}+{self.start_y}")
+
     def handle_key_release(self, event:Event):
         """
         Process Key inputs
@@ -84,6 +97,28 @@ class MainController:
         """
         if event.keysym == 'Escape':
             self.close()
+
+    def on_mouse_move(self, event:Event):
+        """
+        Updates self.mouse_x and self.mouse_y on cursor movement
+        :param event: The event object
+        :return: None
+        """
+        self.mouse_x = event.x
+        self.mouse_y = event.y
+
+    def on_drag(self, event:Event):
+        """
+        Move window on mouse drag with left button clicked
+        :param event:  Event object
+        :return: None
+        """
+        x_offset = event.x - self.mouse_x
+        y_offset = event.y - self.mouse_y
+
+        self.start_x += x_offset
+        self.start_y += y_offset
+        self.set_geometry()
 
     def close(self):
         """
