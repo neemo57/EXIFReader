@@ -1,5 +1,5 @@
 from model import Model
-from centralview import MainView
+from MainView import MainView
 from tkinter import Tk, Event
 import os
 from PIL import Image, ImageTk
@@ -11,8 +11,8 @@ from PIL import Image, ImageTk
 class MainController:
 
     # Main Window Properties
-    ROOT_WINDOW_WIDTH_RATIO = 0.6
-    ROOT_WINDOW_HEIGHT_RATIO = 0.6
+    ROOT_WINDOW_WIDTH_RATIO = .7
+    ROOT_WINDOW_HEIGHT_RATIO = .7
     BORDERLESS = True
     DEFAULT_TITLE = "EXIF Reader v1.1.0"
     DEFAULT_OPACITY = 0.95
@@ -120,6 +120,14 @@ class MainController:
         self.start_y += y_offset
         self.set_geometry()
 
+    def on_click_upload(self):
+        """
+        Handle the file upload button.
+        Calls the file browser from main view
+        :return: None.
+        """
+        self.view.select_file()
+
     def close(self):
         """
         Close the window and exit the program
@@ -144,6 +152,9 @@ class MainController:
                         image = image.resize((self.width, self.height))
                     usable_image = ImageTk.PhotoImage(image)
                     self.assets[basename.lower()] = usable_image
+
+    def read_image(self, image_path):
+        ...
 
     @staticmethod
     def path_fix():
