@@ -8,18 +8,18 @@ class MainView(tk.Frame):
     DEFAULT_BUTTON_TEXT = "Click here to upload a file.\n Or press CTRL + V"
     BUTTON_REL_WIDTH = 0.2
     BUTTON_REL_HEIGHT = 0.1
-    BUTTON_DEF_BACKGROUND = "gray"
-    BUTTON_DEF_FOREGROUND = "black"
+    BUTTON_DEF_BACKGROUND = "purple"
+    BUTTON_DEF_FOREGROUND = "yellow"
 
     BUTTON_SECONDARY_BACKGROUND = "black"
     BUTTON_SECONDARY_FOREGROUND = "white"
 
-    DEFAULT_NO_FILE_ERROR_TITLE = "Error"
+    DEFAULT_ERROR_TITLE = "Error"
     DEFAULT_NO_FILE_WARNING = "Failed to select a file. Please try again or use Ctrl + V "
+    DEFAULT_INFO_TITLE = "Info"
 
     def __init__(self, root_window:tk.Tk, main_controller):
         super().__init__(root_window)
-
 
         self.main_controller = main_controller
         self.root_window = root_window
@@ -82,7 +82,23 @@ class MainView(tk.Frame):
         if file_path:
             self.main_controller.read_image(file_path)
         else:
-            messagebox.showerror(self.DEFAULT_NO_FILE_ERROR_TITLE, self.DEFAULT_NO_FILE_WARNING)
+            self.show_error(self.DEFAULT_NO_FILE_WARNING)
+
+    @staticmethod
+    def show_error(msg, title=DEFAULT_ERROR_TITLE):
+        """
+        One method to show all the errors
+        :return:
+        """
+        messagebox.showerror(title, msg)
+
+    @staticmethod
+    def show_info(msg, title=DEFAULT_INFO_TITLE):
+        """
+        One method to show all the infos
+        :return:
+        """
+        messagebox.showinfo(title, msg)
 
 
     def start(self):
