@@ -85,6 +85,18 @@ class MainController:
         self.root_window.bind("<Motion>", self.on_mouse_move)
         self.root_window.bind("<B1-Motion>", self.on_drag)
 
+    def set_view(self, view_index):
+        """
+        Sets the current view
+        @:param view_index: The integer index to the view in self.views list.
+        :return: None
+        """
+        try:
+            self.views[view_index].grid(row=0, column=0, sticky="nsew")
+            self.views[view_index].tkraise()
+        except IndexError:
+            self.main_view.show_error(f"Invalid Frame Index {view_index}. Aborting application.")
+
     def set_geometry(self):
         """
         Update the geometry of the root window
