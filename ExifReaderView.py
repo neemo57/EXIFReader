@@ -19,3 +19,27 @@ class ExifReaderView(Frame):
         self.image_label = tkinter.Label(self, image=self.main_controller.assets["background"])
         self.image_label.pack()
 
+
+
+class LeftView(Frame):
+
+    def __init__(self, root_window:tkinter.Frame, main_controller):
+
+        super().__init__(root_window)
+
+        # Grab tk and main controller
+        self.root_window = root_window
+        self.main_controller = main_controller
+
+
+
+
+class RightView(Frame):
+
+    def __init__(self, root_window:tkinter.Frame, main_controller):
+
+        super().__init__(root_window)
+
+        # Grab tk and main controller
+        self.root_window = root_window
+        self.main_controller = main_controller
