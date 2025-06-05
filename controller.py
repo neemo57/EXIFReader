@@ -48,7 +48,10 @@ class MainController:
         self.load_assets()
 
         # Attach the view to the main window
-        self.view = MainView(root_window, self)
+        self.main_view = MainView(root_window, self)
+
+
+        # Create the Model
         self.model = ExifReaderModel()
 
     def configure_window(self):
@@ -126,7 +129,7 @@ class MainController:
         Calls the file browser from main view
         :return: None.
         """
-        self.view.select_file()
+        self.main_view.select_file()
 
     def close(self):
         """
@@ -148,7 +151,7 @@ class MainController:
                 basename, extension = os.path.splitext(filename)
                 if extension.lower() in self.VALID_EXTENSIONS:
                     image = Image.open(full_path)
-                    if basename.lower() == "background":
+                    if "background" in basename.lower():
                         image = image.resize((self.width, self.height))
                     usable_image = ImageTk.PhotoImage(image)
                     self.assets[basename.lower()] = usable_image
@@ -161,9 +164,9 @@ class MainController:
         """
         metadata = self.model.read_image_metadata(image_path)
         if metadata:
-            self.view.show_info("Metadata found I guess")
+            self.main_view.show_info("Metadata found I guess")
         else:
-            self.view.show_error("WTF Choose a good image")
+            self.main_view.show_error("WTF Choose a good image")
 
 
     @staticmethod

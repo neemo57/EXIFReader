@@ -32,9 +32,6 @@ class MainView(tk.Frame):
         self.choose_file_button = None
         self.add_button()
 
-        # Finally, attach
-        self.place(x=0, y=0)
-
     def load_background(self):
         self.image_label = tkinter.Label(self, image=self.main_controller.assets["background"])
         self.image_label.pack()
