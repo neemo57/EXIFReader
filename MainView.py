@@ -5,9 +5,11 @@ from tkinter import Button, filedialog, messagebox
 
 class MainView(tk.Frame):
 
+    DEFAULT_BACKGROUND_COLOR = "cyan"
+
     DEFAULT_BUTTON_TEXT = "Click here to upload a file.\n Or press CTRL + V"
-    BUTTON_REL_WIDTH = 0.2
-    BUTTON_REL_HEIGHT = 0.1
+    BUTTON_REL_WIDTH = 0.4
+    BUTTON_REL_HEIGHT = 0.2
     BUTTON_DEF_BACKGROUND = "purple"
     BUTTON_DEF_FOREGROUND = "yellow"
 
@@ -19,7 +21,7 @@ class MainView(tk.Frame):
     DEFAULT_INFO_TITLE = "Info"
 
     def __init__(self, root_window:tk.Tk, main_controller):
-        super().__init__(root_window)
+        super().__init__(root_window, bg=self.DEFAULT_BACKGROUND_COLOR, width=main_controller.width, height=main_controller.height)
 
         self.main_controller = main_controller
         self.root_window = root_window
@@ -33,6 +35,7 @@ class MainView(tk.Frame):
         self.add_button()
 
     def load_background(self):
+        print("But it never gets called")
         self.image_label = tkinter.Label(self, image=self.main_controller.assets["background"])
         self.image_label.pack()
 

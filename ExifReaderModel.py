@@ -1,3 +1,4 @@
+import os
 import exifread
 
 class ExifReaderModel:

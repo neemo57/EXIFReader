@@ -1,4 +1,5 @@
 from ExifReaderModel import ExifReaderModel
+from ExifReaderView import ExifReaderView
 from MainView import MainView
 from tkinter import Tk, Event
 import os
@@ -49,10 +50,14 @@ class MainController:
 
         # Attach the view to the main window
         self.main_view = MainView(root_window, self)
-
+        self.reader_view = ExifReaderView(root_window, self)
+        self.views = [self.main_view, self.reader_view]
 
         # Create the Model
         self.model = ExifReaderModel()
+
+        # Set the default view
+        self.set_view(0)
 
     def configure_window(self):
         """
@@ -177,6 +182,7 @@ class MainController:
         metadata = self.model.read_image_metadata(image_path)
         if metadata:
             self.main_view.show_info("Metadata found I guess")
+            self.set_view(1)
         else:
             self.main_view.show_error("WTF Choose a good image")
 
