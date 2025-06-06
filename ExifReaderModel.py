@@ -44,13 +44,11 @@ class ExifReaderModel:
                         output.append(( str(true_id), str(value) ))
 
                 # Get general details
-                general_details = []
-                general_details.append(("Image Width", f"{img.width}px"))
-                general_details.append(("Image Height", f"{img.height}px"))
-                general_details.append(("Image Size", f"{img.size}bytes"))
-                general_details.append(("Image Path", f"{img.filename}"))
-                general_details.append(("Image Format", f"{img.format}"))
-
+                general_details = [("Image Width", f"{img.width}px"),
+                                   ("Image Height", f"{img.height}px"),
+                                   ("Image Size", f"{img.size}bytes"),
+                                   ("Image Path", f"{img.filename}"),
+                                   ("Image Format", f"{img.format}")]
 
                 # Produce thumbnail
                 img.thumbnail(thumbnail_size)
