@@ -1,3 +1,4 @@
+from ClipboardReaderModel import ClipboardReader
 from ExifReaderModel import ExifReaderModel
 from ExifReaderView import ExifReaderView
 from MainView import MainView
@@ -14,9 +15,9 @@ class MainController:
     # Main Window Properties
     ROOT_WINDOW_WIDTH_RATIO = .7
     ROOT_WINDOW_HEIGHT_RATIO = .7
-    BORDERLESS = True
+    BORDERLESS = False
     DEFAULT_TITLE = "EXIF Reader v1.1.0"
-    DEFAULT_OPACITY = 0.95
+    DEFAULT_OPACITY = 1
 
     # Path Variables
     ASSETS_FOLDER = "Assets"
@@ -54,9 +55,11 @@ class MainController:
         self.views = [self.main_view, self.reader_view]
 
         # Create the Model
-        self.model = ExifReaderModel()
+        self.exif_reader = ExifReaderModel()
+        self.clipboard_reader = ClipboardReader()
 
         # Set the default view
+        self.set_view(1)
         self.set_view(0)
 
     def configure_window(self):
@@ -89,6 +92,9 @@ class MainController:
         # Add mouse binds
         self.root_window.bind("<Motion>", self.on_mouse_move)
         self.root_window.bind("<B1-Motion>", self.on_drag)
+
+        # Add Ctrl + V bind
+        self.root_window.bind("<Control-v>", self.clipboard_paste)
 
     def set_view(self, view_index):
         """
@@ -173,18 +179,53 @@ class MainController:
                     usable_image = ImageTk.PhotoImage(image)
                     self.assets[basename.lower()] = usable_image
 
-    def read_image(self, image_path):
+    def read_image(self, image_path, metadata=None, thumbnail=None, general_details=None, supress_error=False):
         """
         Reads metadata from an image and switches the view to MetaDataView
         :param image_path: Path to the image, chosen from MainView's file chooser
+        :param metadata:
+        :param thumbnail:
+        :param supress_error:
         :return: None
         """
-        metadata = self.model.read_image_metadata(image_path)
-        if metadata:
-            self.main_view.show_info("Metadata found I guess")
-            self.set_view(1)
+        if image_path:
+            thumb_size = int(self.views[1].left_view.image_viewer.winfo_width()), int(self.views[1].left_view.image_viewer.winfo_height())
+            success, metadata, thumbnail, general_details = self.exif_reader.read_image_metadata(image_path, thumb_size)
         else:
-            self.main_view.show_error("WTF Choose a good image")
+            success=True
+
+        if success:
+            self.reader_view.left_view.update_column_widths()
+            self.reader_view.left_view.clear_table()
+
+            self.reader_view.right_view.update_column_widths()
+            self.reader_view.right_view.clear_table()
+
+            # Add the rows in metadata into the table.
+            for row in metadata:
+                self.views[1].right_view.add_to_table(row)
+            # Add the rows in general details into the table
+            for row in general_details:
+                self.views[1].left_view.add_to_table(row)
+            # Set the thumbnail
+            self.views[1].left_view.set_image(thumbnail)
+
+            # Update the view
+            self.set_view(1)
+
+        else:
+            if not supress_error:
+                self.main_view.show_error(metadata) # metadata is the error returned in case image reading fails
+
+    def clipboard_paste(self, e):
+        """
+        Reads the clipboard for a possible image path
+        :return:
+        """
+        thumb_size = int(self.views[1].left_view.image_viewer.winfo_width()), int(self.views[1].left_view.image_viewer.winfo_height())
+        has_metadata, metadata, thumbnail, general_details = self.clipboard_reader.read_metadata_from_clipboard(thumb_size)
+        if has_metadata:
+            self.read_image("", metadata=metadata, thumbnail=thumbnail, general_details=general_details, supress_error=True)
 
 
     @staticmethod

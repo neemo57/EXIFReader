@@ -35,7 +35,6 @@ class MainView(tk.Frame):
         self.add_button()
 
     def load_background(self):
-        print("But it never gets called")
         self.image_label = tkinter.Label(self, image=self.main_controller.assets["background"])
         self.image_label.pack()
 
