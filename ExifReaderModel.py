@@ -46,7 +46,7 @@ class ExifReaderModel:
                 # Get general details
                 general_details = [("Image Width", f"{img.width}px"),
                                    ("Image Height", f"{img.height}px"),
-                                   ("Image Size", f"{os.path.getsize(image_path)}bytes"),
+                                   ("Image Size", f"{os.path.getsize(image_path):,} bytes"),
                                    ("Image Path", f"{img.filename}"),
                                    ("Image Format", f"{img.format}")]
 
